@@ -19,28 +19,37 @@ export class RegistrationController {
   @Post()
   @ApiResponse({ status: 201, description: 'User successfully registered' })
   @ApiResponse({ status: 400, description: 'Invalid phone number' })
-  create(@Body() createRegistrationDto: CreateRegistrationDto) {
+  async create(@Body() createRegistrationDto: CreateRegistrationDto) {
+    const checkAvailablity = await this.registrationService.findOne(
+      createRegistrationDto.phone,
+    );
+    if (checkAvailablity) {
+      return { message: 'User with this phone number already exists' };
+    }
+
     return this.registrationService.create(createRegistrationDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.registrationService.findAll();
-  // }
+  @Get('/findAll')
+  async findAll() {
+    return await this.registrationService.findAll();
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.registrationService.findOne(+id);
-  // }
+  @Get(':phoneNumber/findOne')
+  async findOne(@Param('phoneNumber') phoneNumber: string) {
+    return await this.registrationService.findOne(phoneNumber);
+  }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateRegistrationDto: UpdateRegistrationDto,
-  // ) {
-  //   return this.registrationService.update(+id, updateRegistrationDto);
-  // }
-
+  @Patch(':phoneNumber')
+  async update(
+    @Param('phoneNumber') phoneNumber: string,
+    @Body() updateRegistrationDto: UpdateRegistrationDto,
+  ) {
+    return await this.registrationService.update(
+      phoneNumber,
+      updateRegistrationDto,
+    );
+  }
   // @Delete(':id')
   // remove(@Param('id') id: string) {
   //   return this.registrationService.remove(+id);

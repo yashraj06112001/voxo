@@ -5,17 +5,17 @@ export class CreateRegistrationDto {
     example: '9876543210',
     description: 'Phone number of the user',
   })
-  phone: string;
+  phone!: string;
 
   @ApiProperty({
     example: 'StrongPassword123',
     description: 'Password of the user',
   })
-  password: string;
+  password!: string;
 
   @ApiProperty({
     example: 'Yash',
     description: 'Name of the user',
   })
-  name: string;
+  name!: string;
 }

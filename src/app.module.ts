@@ -5,13 +5,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { RegistrationModule } from './authentication/registration/registration.module';
 import { UsersModule } from './users/users.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URI!),
     RegistrationModule,
-    UsersModule,],
+    UsersModule,
+    ChatModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
