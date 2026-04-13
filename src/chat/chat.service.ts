@@ -7,9 +7,7 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class ChatService {
-  constructor(
-    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
-  ) {}
+  constructor(@InjectModel('Chat') private readonly chatModel: Model<Chat>) {}
 
   async create(createChatDto: CreateChatDto): Promise<Chat> {
     const savedChat: Chat = await this.chatModel.create(createChatDto);

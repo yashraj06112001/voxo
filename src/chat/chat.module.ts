@@ -6,7 +6,7 @@ import { Chat, ChatSchema } from './entities/chat.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema }]),
+    MongooseModule.forFeature([{ name: 'Chat', schema: ChatSchema }]),
   ],
   providers: [ChatGateway, ChatService],
 })
