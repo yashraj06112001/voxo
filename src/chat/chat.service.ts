@@ -1,33 +1,39 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
-import { ChatModel } from './entities/chat.entity';
+import { Chat } from './entities/chat.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+
 @Injectable()
 export class ChatService {
   constructor(
-    @InjectModel(ChatModel.name) private readonly chatModel: Model<ChatModel>,
+    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
   ) {}
 
-  async create(createChatDto: CreateChatDto) {
-    const savedChat = await this.chatModel.create(createChatDto);
+  async create(createChatDto: CreateChatDto): Promise<Chat> {
+    const savedChat: Chat = await this.chatModel.create(createChatDto);
     if (!savedChat) {
       throw new Error('Failed to create chat');
     }
     return savedChat;
   }
 
-  async findOne(id: number) {
-    const chat = await this.chatModel.findById(id).exec();
+  async findAll(): Promise<Chat[]> {
+    const chats: Chat[] = await this.chatModel.find().exec();
+    return chats;
+  }
+
+  async findOne(id: number): Promise<Chat> {
+    const chat: Chat | null = await this.chatModel.findById(id).exec();
     if (!chat) {
       throw new NotFoundException(`Chat with id ${id} not found`);
     }
     return chat;
   }
 
-  async update(id: number, updateChatDto: UpdateChatDto) {
-    const updatedChat = await this.chatModel
+  async update(id: number, updateChatDto: UpdateChatDto): Promise<Chat> {
+    const updatedChat: Chat | null = await this.chatModel
       .findByIdAndUpdate(id, updateChatDto, { new: true })
       .exec();
     if (!updatedChat) {
@@ -36,9 +42,11 @@ export class ChatService {
     return updatedChat;
   }
 
-  async remove(id: number) {
-    const result = await this.chatModel.findByIdAndRemove(id).exec();
-    if (result.n === 0) {
+  async remove(id: number): Promise<void> {
+    const result: Chat | null = await this.chatModel
+      .findByIdAndDelete(id)
+      .exec();
+    if (!result) {
       throw new Error(`Failed to remove chat with id ${id}`);
     }
   }
