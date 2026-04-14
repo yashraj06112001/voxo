@@ -46,11 +46,7 @@ export class PostService {
 
   async addComment(id: string, comment: string): Promise<Post> {
     const post: Post | null = await this.postModel
-      .findByIdAndUpdate(
-        id,
-        { $push: { comments: comment } },
-        { new: true },
-      )
+      .findByIdAndUpdate(id, { $push: { comments: comment } }, { new: true })
       .exec();
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found`);
